@@ -66,7 +66,7 @@ but they are invisible here:
   `civic-trivia-backend`. Check Render's change preview to confirm the first
   sync does not resume or redeploy them.
 - **Env var values and secret files** (by design).
-- **Static site build plan** (`starter` on all 17 static sites; it is the
+- **Static site build plan** (`starter` on all 15 static sites; it is the
   default).
 - **Web service build cache** (`no-cache`), failure notifications
   (`default`) and open ports (detected by Render).
