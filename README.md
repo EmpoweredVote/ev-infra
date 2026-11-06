@@ -6,9 +6,8 @@ It is a Render Blueprint ([spec](https://render.com/docs/blueprint-spec)).
 
 **Status: DRAFT, not linked.** No Blueprint exists in Render yet, so today
 this file changes nothing. Render's dashboard is still the source of truth.
-This repo has no remote yet. Creating the GitHub repo (and choosing public or
-private) and linking the Blueprint are separate founder approvals, under
-ev-cto decision 0037.
+Linking the Blueprint needs its own founder approval, under ev-cto decision
+0037. This repo is public: it holds no secret values.
 
 ## Once it is linked
 
