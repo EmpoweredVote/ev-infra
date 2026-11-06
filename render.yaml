@@ -1,0 +1,1020 @@
+# Empowered Vote — every Render service in workspace tea-d69tn76mcj7s738vmt10.
+#
+# DRAFT. Generated 2026-11-06 from the Render REST API (not linked to Render).
+# See README.md before changing or linking this file.
+#
+# Env vars are names only. Every one is `sync: false`: Render keeps the value
+# already set in the dashboard, and this file never holds a secret.
+
+version: '1'
+projects:
+  - name: Empowered Vote
+    environments:
+      - name: Production
+        services:
+          - type: web
+            runtime: static
+            name: civic-spaces-frontend
+            repo: https://github.com/EmpoweredVote/civic-spaces
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - civicspaces.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: VITE_EMPOWERED_ACCOUNTS_URL
+                sync: false
+              - key: VITE_SLICE_ASSIGNMENT_URL
+                sync: false
+              - key: VITE_SUPABASE_ANON_KEY
+                sync: false
+              - key: VITE_SUPABASE_URL
+                sync: false
+          - type: web
+            runtime: node
+            name: civic-spaces-slice-assignment
+            plan: starter
+            region: oregon
+            repo: https://github.com/EmpoweredVote/civic-spaces
+            branch: main
+            rootDir: services/slice-assignment
+            autoDeployTrigger: commit
+            buildCommand: npm install && npm run build
+            startCommand: node dist/index.js
+            numInstances: 1
+            previews:
+              generation: 'off'
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ACCOUNTS_API_URL
+                sync: false
+              - key: ACCOUNTS_ISSUER
+                sync: false
+              - key: ACCOUNTS_JWKS_URL
+                sync: false
+              - key: PORT
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: WORKOS_ISSUER
+                sync: false
+              - key: WORKOS_JWKS_URL
+                sync: false
+          - type: web
+            runtime: node
+            name: civic-trivia-backend
+            plan: starter
+            region: oregon
+            repo: https://github.com/EmpoweredVote/Civic-Trivia-Championships
+            branch: master
+            rootDir: backend
+            autoDeployTrigger: 'off'
+            buildCommand: npm install --include=dev && npm run build && cp -r src/data dist/data
+            startCommand: npm start
+            healthCheckPath: /health/live
+            numInstances: 1
+            previews:
+              generation: 'off'
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ANTHROPIC_API_KEY
+                sync: false
+              - key: CORS_ORIGIN
+                sync: false
+              - key: DATABASE_URL
+                sync: false
+              - key: EMPOWERED_ACCOUNTS_API_URL
+                sync: false
+              - key: EMPOWERED_ACCOUNTS_URL
+                sync: false
+              - key: FRONTEND_URL
+                sync: false
+              - key: FRONTEND_URL_ALT
+                sync: false
+              - key: JWT_REFRESH_SECRET
+                sync: false
+              - key: JWT_SECRET
+                sync: false
+              - key: NODE_ENV
+                sync: false
+              - key: NODE_OPTIONS
+                sync: false
+              - key: PORT
+                sync: false
+              - key: REDIS_URL
+                sync: false
+              - key: SUPABASE_ACCESS_TOKEN
+                sync: false
+              - key: SUPABASE_ANON_KEY
+                sync: false
+              - key: SUPABASE_JWT_SECRET
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: TRIVIA_GEMS_KEY
+                sync: false
+              - key: TRIVIA_SERVICE_KEY
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: civic-trivia-frontend
+            repo: https://github.com/EmpoweredVote/Civic-Trivia-Championships
+            branch: master
+            rootDir: frontend
+            autoDeployTrigger: commit
+            buildCommand: npm install && npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - ctc.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_EMPOWERED_ACCOUNTS_URL
+                sync: false
+              - key: VITE_EMPOWERED_ACCOUNTS_WEB_URL
+                sync: false
+              - key: VITE_POSTHOG_KEY
+                sync: false
+              - key: VITE_SUPABASE_ANON_KEY
+                sync: false
+              - key: VITE_SUPABASE_URL
+                sync: false
+          - type: web
+            runtime: static
+            name: compass-frontend
+            repo: https://github.com/EmpoweredVote/CompassV2
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - compass.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NPM_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_POSTHOG_KEY
+                sync: false
+          - type: web
+            runtime: static
+            name: empowered-badges-frontend
+            repo: https://github.com/EmpoweredVote/empowered-badges
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - badges.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NPM_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+          - type: web
+            runtime: node
+            name: empowered-listening
+            plan: starter
+            region: oregon
+            repo: https://github.com/EmpoweredVote/Empowered-Listening
+            branch: master
+            autoDeployTrigger: commit
+            buildCommand: npm install && npm run build
+            startCommand: npm run start
+            numInstances: 1
+            previews:
+              generation: 'off'
+            domains:
+              - listening.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ACCOUNTS_API_BASE
+                sync: false
+              - key: DATABASE_TRANSACTION_POOLER_URL
+                sync: false
+              - key: DEEPGRAM_API_KEY
+                sync: false
+              - key: JWKS_URL
+                sync: false
+              - key: LIVEKIT_API_KEY
+                sync: false
+              - key: LIVEKIT_API_SECRET
+                sync: false
+              - key: LIVEKIT_URL
+                sync: false
+              - key: MUX_TOKEN_ID
+                sync: false
+              - key: MUX_TOKEN_SECRET
+                sync: false
+              - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+                sync: false
+              - key: NEXT_PUBLIC_SUPABASE_URL
+                sync: false
+              - key: NODE_OPTIONS
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: node
+            name: empowered-validation-quests
+            plan: starter
+            region: oregon
+            repo: https://github.com/EmpoweredVote/empowered-validation-quests
+            branch: master
+            rootDir: backend
+            autoDeployTrigger: 'off'
+            buildCommand: ' npm install && npm run build'
+            startCommand: ' node dist/index.js'
+            healthCheckPath: /api/health
+            numInstances: 1
+            previews:
+              generation: 'off'
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ADMIN_SERVICE_KEY
+                sync: false
+              - key: CORS_ORIGIN
+                sync: false
+              - key: EMPOWERED_ACCOUNTS_URL
+                sync: false
+              - key: ENABLE_XP_AWARDS
+                sync: false
+              - key: ESSENTIALS_PIPELINE_ENABLED
+                sync: false
+              - key: QUEST_SERVICE_KEY
+                sync: false
+              - key: SUPABASE_ANON_KEY
+                sync: false
+              - key: SUPABASE_JWT_SECRET
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: TRIVIA_SERVICE_KEY
+                sync: false
+              - key: UPSTASH_REDIS_PASSWORD
+                sync: false
+              - key: UPSTASH_REDIS_REST_TOKEN
+                sync: false
+              - key: UPSTASH_REDIS_REST_URL
+                sync: false
+              - key: VQ_SERVICE_KEY
+                sync: false
+              - key: WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: validation-quests-frontend
+            repo: https://github.com/EmpoweredVote/empowered-validation-quests
+            branch: master
+            rootDir: frontend
+            autoDeployTrigger: commit
+            buildCommand: ' npm install && npm run build'
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - quests.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: SUPABASE_JWT_SECRET
+                sync: false
+              - key: VITE_ACCOUNTS_API_URL
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_AUTHKIT_ONLY
+                sync: false
+              - key: VITE_EMBEDDED_AUTH
+                sync: false
+              - key: VITE_SUPABASE_ANON_KEY
+                sync: false
+              - key: VITE_SUPABASE_URL
+                sync: false
+              - key: VITE_WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: essentials-frontend
+            repo: https://github.com/EmpoweredVote/essentials
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            headers:
+              - path: /coverage.json
+                name: Access-Control-Allow-Origin
+                value: '*'
+            domains:
+              - essentials.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: GOOGLE_MAPS_API_KEY
+                sync: false
+              - key: NPM_TOKEN
+                sync: false
+              - key: POSTHOG_API_KEY
+                sync: false
+              - key: POSTHOG_PROJECT_ID
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_GOOGLE_MAPS_API_KEY
+                sync: false
+              - key: VITE_POSTHOG_KEY
+                sync: false
+              - key: VITE_TREASURY_URL
+                sync: false
+          - type: web
+            runtime: static
+            name: empowered-vote-app
+            repo: https://github.com/EmpoweredVote/ev-accounts
+            branch: master
+            autoDeployTrigger: commit
+            buildFilter:
+              paths:
+                - app/**
+            buildCommand: cd app && npm install && npm run build
+            staticPublishPath: app/dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - profile.empowered.vote
+              - app.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NODE_VERSION
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_AUTHKIT_ONLY
+                sync: false
+              - key: VITE_EMBEDDED_AUTH
+                sync: false
+              - key: VITE_WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: ev-accounts
+            repo: https://github.com/EmpoweredVote/ev-accounts
+            branch: master
+            rootDir: admin
+            autoDeployTrigger: commit
+            buildCommand: npm install && npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - login.empowered.vote
+              - accounts.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ADMIN_SERVICE_KEY
+                sync: false
+              - key: CORS_ORIGIN
+                sync: false
+              - key: DATABASE_URL
+                sync: false
+              - key: LINEAR_API_KEY
+                sync: false
+              - key: LINEAR_PROJECT_ID
+                sync: false
+              - key: LINEAR_TEAM_ID
+                sync: false
+              - key: QUEST_SERVICE_KEY
+                sync: false
+              - key: REDIS_URL
+                sync: false
+              - key: SUPABASE_ANON_KEY
+                sync: false
+              - key: SUPABASE_JWT_SECRET
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: TRIVIA_SERVICE_KEY
+                sync: false
+              - key: UPSTASH_REDIS_REST_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_AUTHKIT_ONLY
+                sync: false
+              - key: VITE_EMBEDDED_AUTH
+                sync: false
+              - key: VITE_WORKOS_CLIENT_ID
+                sync: false
+              - key: VQ_SERVICE_KEY
+                sync: false
+          - type: web
+            runtime: node
+            name: ev-accounts-api
+            plan: standard
+            region: oregon
+            repo: https://github.com/EmpoweredVote/ev-accounts
+            branch: master
+            rootDir: backend
+            autoDeployTrigger: commit
+            buildCommand: npm install --include=dev && npm run build
+            startCommand: node --dns-result-order=verbatim dist/index.js
+            healthCheckPath: /api/health
+            numInstances: 1
+            previews:
+              generation: 'off'
+            domains:
+              - api.empowered.vote
+              - accounts-api.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ADMIN_EMAIL
+                sync: false
+              - key: ADMIN_INGEST_TOKEN
+                sync: false
+              - key: ADMIN_SERVICE_KEY
+                sync: false
+              - key: ANTHROPIC_API_KEY
+                sync: false
+              - key: AUTHKIT_PRIMARY
+                sync: false
+              - key: CIVIC_SPACES_DATABASE_URL
+                sync: false
+              - key: CONGRESS_GOV_API_KEY
+                sync: false
+              - key: COOKIE_DOMAIN
+                sync: false
+              - key: CORS_ORIGIN
+                sync: false
+              - key: DATABASE_URL
+                sync: false
+              - key: EMPOWERED_ACCOUNTS_API_URL
+                sync: false
+              - key: EMPOWERED_ACCOUNTS_URL
+                sync: false
+              - key: ESSENTIALS_SERVICE_KEY
+                sync: false
+              - key: EV_ROLE
+                sync: false
+              - key: FEC_API_KEY
+                sync: false
+              - key: FEC_BACKFILL_AUTORESUME
+                sync: false
+              - key: FEC_PER_PAGE_SLEEP_MS
+                sync: false
+              - key: FEC_SLEEP_BETWEEN_PAIRS_MS
+                sync: false
+              - key: FOCUSED_COMMUNITIES_DATABASE_URL
+                sync: false
+              - key: GEMS_SERVICE_KEYS
+                sync: false
+              - key: GOOGLE_CIVIC_API_KEY
+                sync: false
+              - key: GOOGLE_MAPS_API_KEY
+                sync: false
+              - key: ID_VAULT_KEY_VERSION
+                sync: false
+              - key: ID_VAULT_PUBLIC_KEY
+                sync: false
+              - key: IGA_API_KEY
+                sync: false
+              - key: JOB_HEALTH_ALERT_TO
+                sync: false
+              - key: JWT_REFRESH_SECRET
+                sync: false
+              - key: JWT_SECRET
+                sync: false
+              - key: LINEAR_API_KEY
+                sync: false
+              - key: LINEAR_PROJECT_ID
+                sync: false
+              - key: LINEAR_TEAM_ID
+                sync: false
+              - key: LISTENING_XP_KEY
+                sync: false
+              - key: NODE_ENV
+                sync: false
+              - key: PORT
+                sync: false
+              - key: QUEST_SERVICE_KEY
+                sync: false
+              - key: READRANK_TOKEN_SECRET
+                sync: false
+              - key: REDIS_URL
+                sync: false
+              - key: RESEND_API_KEY
+                sync: false
+              - key: SUPABASE_ANON_KEY
+                sync: false
+              - key: SUPABASE_PUBLISHABLE_KEY
+                sync: false
+              - key: SUPABASE_SECRET_KEY
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: TRIVIA_CRONS_ENABLED
+                sync: false
+              - key: TRIVIA_GEMS_KEY
+                sync: false
+              - key: TRIVIA_REDIS_URL
+                sync: false
+              - key: TRIVIA_SERVICE_KEY
+                sync: false
+              - key: UPSTASH_REDIS_REST_TOKEN
+                sync: false
+              - key: UPSTASH_REDIS_REST_URL
+                sync: false
+              - key: VQ_CRONS_ENABLED
+                sync: false
+              - key: VQ_GEMS_SERVICE_KEY
+                sync: false
+              - key: VQ_SERVICE_KEY
+                sync: false
+              - key: WORKOS_API_KEY
+                sync: false
+              - key: WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: ev-context
+            repo: https://github.com/EmpoweredVote/ev-context
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: ''
+            staticPublishPath: .
+            previews:
+              generation: 'off'
+            domains:
+              - ev-context.empowered.vote
+            renderSubdomainPolicy: enabled
+          - type: web
+            runtime: static
+            name: ev-landing
+            repo: https://github.com/EmpoweredVote/ev-landing
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: ''
+            staticPublishPath: .
+            previews:
+              generation: 'off'
+            domains:
+              - empowered.vote
+              - alpha.empowered.vote
+            renderSubdomainPolicy: enabled
+          - type: web
+            runtime: static
+            name: fallacy-finders-frontend
+            repo: https://github.com/EmpoweredVote/fallacy-finders
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - fallacyfinders.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NPM_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+          - type: web
+            runtime: node
+            name: focused-communities
+            plan: starter
+            region: oregon
+            repo: https://github.com/EmpoweredVote/focused-communities
+            branch: master
+            autoDeployTrigger: commit
+            buildCommand: npm install && npm run build:all
+            startCommand: node dist/server.js
+            numInstances: 1
+            previews:
+              generation: 'off'
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: ACCOUNTS_API_URL
+                sync: false
+              - key: SUPABASE_ANON_KEY
+                sync: false
+              - key: SUPABASE_SERVICE_ROLE_KEY
+                sync: false
+              - key: SUPABASE_URL
+                sync: false
+              - key: UPSTASH_REDIS_REST_TOKEN
+                sync: false
+              - key: UPSTASH_REDIS_REST_URL
+                sync: false
+              - key: WORKOS_CLIENT_ID
+                sync: false
+          - type: web
+            runtime: static
+            name: focused-communities-frontend
+            repo: https://github.com/EmpoweredVote/focused-communities
+            branch: master
+            autoDeployTrigger: commit
+            buildCommand: cd frontend && npm ci && npm run build
+            staticPublishPath: frontend/dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - focusedcommunities.empowered.vote
+              - fc.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: VITE_API_BASE_URL
+                sync: false
+          - type: web
+            runtime: static
+            name: on-the-record
+            repo: https://github.com/EmpoweredVote/on-the-record
+            branch: main
+            rootDir: web
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: out
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /meetings/*
+                destination: /meetings/view/index.html
+              - type: rewrite
+                source: /people/*
+                destination: /people/view/index.html
+              - type: rewrite
+                source: /topics/*
+                destination: /topics/view/index.html
+              - type: rewrite
+                source: /items/*
+                destination: /items/view/index.html
+              - type: rewrite
+                source: /admin/meetings/*
+                destination: /admin/meetings/view/index.html
+            domains:
+              - otr.empowered.vote
+              - ontherecord.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: DATABASE_URL
+                sync: false
+              - key: EV_ACCOUNTS_URL
+                sync: false
+              - key: NEXT_PUBLIC_EV_ACCOUNTS_URL
+                sync: false
+          - type: web
+            runtime: static
+            name: read-rank-frontend
+            repo: https://github.com/EmpoweredVote/read-rank
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - readrank.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NPM_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_GOOGLE_MAPS_API_KEY
+                sync: false
+              - key: VITE_POSTHOG_KEY
+                sync: false
+          - type: web
+            runtime: static
+            name: treasury-tracker-frontend
+            repo: https://github.com/EmpoweredVote/treasury-tracker
+            branch: main
+            autoDeployTrigger: commit
+            buildCommand: npm install; npm run build
+            staticPublishPath: dist
+            previews:
+              generation: 'off'
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+            domains:
+              - financials.empowered.vote
+              - tt.empowered.vote
+              - treasurytracker.empowered.vote
+            renderSubdomainPolicy: enabled
+            envVars:
+              - key: NPM_TOKEN
+                sync: false
+              - key: VITE_API_URL
+                sync: false
+              - key: VITE_POSTHOG_KEY
+                sync: false
+services:
+  - type: cron
+    runtime: node
+    name: ev-jobs-cal-access
+    plan: pro
+    region: oregon
+    schedule: 0 16 * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js cal-access; a=$?; node --dns-result-order=verbatim dist/jobs/run.js indiana; b=$?; [ $a -eq 0 ] && [ $b -eq 0 ]
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-fec-burst
+    plan: standard
+    region: oregon
+    schedule: 0 6 * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js fec-auto-match; a=$?; node --dns-result-order=verbatim dist/jobs/run.js fec-finance-summary; c=$?; node --dns-result-order=verbatim
+      dist/jobs/run.js fec-burst; b=$?; [ $a -eq 0 ] && [ $c -eq 0 ] && [ $b -eq 0 ]
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-la-county-netfile
+    plan: starter
+    region: oregon
+    schedule: 0 3 1 * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js la-county-netfile
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-legiscan
+    plan: 1c-2g
+    region: oregon
+    schedule: 0 14 * * 0
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildCommand: cd backend && npm install --include=dev && npx tsc
+    startCommand: cd backend && node dist/jobs/run.js legiscan; a=$?; node dist/jobs/run.js federal-bills; b=$?; node dist/jobs/run.js federal-votes; c=$?; [ "$a$b$c" = 000 ]
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: LEGISCAN_FORCE
+        sync: false
+      - key: LEGISCAN_STATES
+        sync: false
+      - key: NODE_OPTIONS
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-ocpf
+    plan: starter
+    region: oregon
+    schedule: 0 4 1 * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js ocpf
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-trivia-election-detection
+    plan: starter
+    region: oregon
+    schedule: 0 11 * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js trivia-election-detection
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+  - type: cron
+    runtime: node
+    name: ev-jobs-trivia-pipeline
+    plan: starter
+    region: oregon
+    schedule: 0 7 * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js trivia-pipeline
+    envVars:
+      - fromGroup: ev-jobs-shared
+      - key: NPM_CONFIG_INCLUDE
+        sync: false
+      - key: TRIVIA_QUALITY_RULES_ENFORCE
+        sync: false
+envVarGroups:
+  - name: ev-jobs-shared
+    envVars:
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_INGEST_TOKEN
+        sync: false
+      - key: ADMIN_SERVICE_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: AUTHKIT_PRIMARY
+        sync: false
+      - key: CIVIC_SPACES_DATABASE_URL
+        sync: false
+      - key: CONGRESS_GOV_API_KEY
+        sync: false
+      - key: COOKIE_DOMAIN
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: EMPOWERED_ACCOUNTS_API_URL
+        sync: false
+      - key: EMPOWERED_ACCOUNTS_URL
+        sync: false
+      - key: ESSENTIALS_SERVICE_KEY
+        sync: false
+      - key: FEC_API_KEY
+        sync: false
+      - key: FEC_BACKFILL_AUTORESUME
+        sync: false
+      - key: FEC_PER_PAGE_SLEEP_MS
+        sync: false
+      - key: FEC_SLEEP_BETWEEN_PAIRS_MS
+        sync: false
+      - key: GEMS_SERVICE_KEYS
+        sync: false
+      - key: GOOGLE_CIVIC_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: LEGISCAN_API_KEY
+        sync: false
+      - key: LINEAR_API_KEY
+        sync: false
+      - key: LINEAR_PROJECT_ID
+        sync: false
+      - key: LINEAR_TEAM_ID
+        sync: false
+      - key: LISTENING_XP_KEY
+        sync: false
+      - key: NODE_ENV
+        sync: false
+      - key: PORT
+        sync: false
+      - key: QUEST_SERVICE_KEY
+        sync: false
+      - key: READRANK_TOKEN_SECRET
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: TRIVIA_CRONS_ENABLED
+        sync: false
+      - key: TRIVIA_GEMS_KEY
+        sync: false
+      - key: TRIVIA_REDIS_URL
+        sync: false
+      - key: TRIVIA_SERVICE_KEY
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: VQ_CRONS_ENABLED
+        sync: false
+      - key: VQ_GEMS_SERVICE_KEY
+        sync: false
+      - key: VQ_SERVICE_KEY
+        sync: false
+      - key: WORKOS_API_KEY
+        sync: false
+      - key: WORKOS_CLIENT_ID
+        sync: false
+  - name: EV-NoServices
+    envVars:
+      - key: TRIVIA_CONTENT_KEY
+        sync: false
