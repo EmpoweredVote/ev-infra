@@ -603,6 +603,13 @@ projects:
             staticPublishPath: .
             previews:
               generation: 'off'
+            # Only EV sites (and local dev) may embed this page in a frame.
+            # index.html already ignores messages from other origins; this
+            # header is a second lock on the same door.
+            headers:
+              - path: /*
+                name: Content-Security-Policy
+                value: frame-ancestors https://empowered.vote https://*.empowered.vote http://localhost:* http://127.0.0.1:*
             domains:
               - ev-context.empowered.vote
             renderSubdomainPolicy: enabled
