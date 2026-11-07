@@ -4,12 +4,12 @@
 services and 2 environment groups in workspace `tea-d69tn76mcj7s738vmt10`.
 It is a Render Blueprint ([spec](https://render.com/docs/blueprint-spec)).
 
-**Status: DRAFT, not linked.** No Blueprint exists in Render yet, so today
-this file changes nothing. Render's dashboard is still the source of truth.
-Linking the Blueprint needs its own founder approval, under ev-cto decision
-0037. This repo is public: it holds no secret values.
+**Status: LINKED.** Since 2026-11-07 this file is Render Blueprint
+`exs-dbn7hgjrjlhs739nnekg` (branch `main`, file `render.yaml`, auto-sync on),
+under ev-cto decision 0037. Every merge to `main` syncs to Render. This repo is
+public: it holds no secret values.
 
-## Once it is linked
+## Working with it
 
 - **This file is the source of truth.** Change Render only through a PR here.
   A sync overwrites any dashboard edit that conflicts with this file, so a
@@ -72,10 +72,13 @@ but they are invisible here:
 - **`www.empowered.vote`.** Render adds the `www` redirect itself when the
   apex `empowered.vote` is listed, so the file lists only the apex.
 
-## Before linking
+## How it was linked (2026-11-07)
 
-1. Push this repo, then create the Blueprint in Render pointing at it.
-2. Read Render's change preview. Every service should show as adopting an
-   existing resource with **no** setting changes. Stop if it shows any
-   creation, deletion, or setting change.
-3. Approve the first sync only after that check.
+Render's preview showed "associate" for all 28 services and both env groups,
+and one change: on-the-record's start command set to empty (a static site
+never runs one). After the first sync, `scripts/check-live.py` matched live
+Render on every checked field, and the four suspended services stayed
+suspended.
+
+The preview is the safety check for every future change too: on a PR here,
+anything beyond the intended setting is a reason to stop.
