@@ -1,6 +1,6 @@
 # ev-infra
 
-`render.yaml` here describes every Render service Empowered Vote runs: 28
+`render.yaml` here describes every Render service Empowered Vote runs: 27
 services and 2 environment groups in workspace `tea-d69tn76mcj7s738vmt10`.
 It is a Render Blueprint ([spec](https://render.com/docs/blueprint-spec)).
 
@@ -27,7 +27,7 @@ public: it holds no secret values.
 
 ## Layout
 
-- `projects` → `Empowered Vote` → `Production`: the 21 services that sit in
+- `projects` → `Empowered Vote` → `Production`: the 20 services that sit in
   that Render project today.
 - Top-level `services`: the 7 `ev-jobs-*` cron jobs. They belong to no
   project on Render, and this file keeps it that way.
@@ -60,10 +60,9 @@ checks the file against Render's schema and the workspace.
 These live settings have no Blueprint field. Render keeps them as they are,
 but they are invisible here:
 
-- **Suspended state.** Four services are suspended: `focused-communities`,
-  `civic-spaces-slice-assignment`, `empowered-validation-quests`,
-  `civic-trivia-backend`. Check Render's change preview to confirm the first
-  sync does not resume or redeploy them.
+- **Suspended state.** Three services are suspended: `focused-communities`,
+  `empowered-validation-quests`, `civic-trivia-backend`. Check Render's change
+  preview to confirm a sync does not resume or redeploy them.
 - **Env var values and secret files** (by design).
 - **Static site build plan** (`starter` on all 15 static sites; it is the
   default).

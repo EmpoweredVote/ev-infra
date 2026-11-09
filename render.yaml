@@ -40,38 +40,6 @@ projects:
                 sync: false
           - type: web
             runtime: node
-            name: civic-spaces-slice-assignment
-            plan: starter
-            region: oregon
-            repo: https://github.com/EmpoweredVote/civic-spaces
-            branch: main
-            rootDir: services/slice-assignment
-            autoDeployTrigger: commit
-            buildCommand: npm install && npm run build
-            startCommand: node dist/index.js
-            numInstances: 1
-            previews:
-              generation: 'off'
-            renderSubdomainPolicy: enabled
-            envVars:
-              - key: ACCOUNTS_API_URL
-                sync: false
-              - key: ACCOUNTS_ISSUER
-                sync: false
-              - key: ACCOUNTS_JWKS_URL
-                sync: false
-              - key: PORT
-                sync: false
-              - key: SUPABASE_SERVICE_ROLE_KEY
-                sync: false
-              - key: SUPABASE_URL
-                sync: false
-              - key: WORKOS_ISSUER
-                sync: false
-              - key: WORKOS_JWKS_URL
-                sync: false
-          - type: web
-            runtime: node
             name: civic-trivia-backend
             plan: starter
             region: oregon
