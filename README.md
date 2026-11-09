@@ -18,10 +18,13 @@ public: it holds no secret values.
   with `sync: false`. Render keeps the value already set and never reads one
   from here. Never put a value in this file. To add a variable, add its name
   here with `sync: false`, then set the value in the dashboard.
-- **Retiring a service:** remove it here, merge, let the sync finish, then
-  delete it in the dashboard. A service deleted in the dashboard but still in
+- **Retiring a service:** remove it here and merge, then delete it in the
+  dashboard. Order matters: a service deleted in the dashboard but still in
   this file is **recreated** on the next sync. Removing it from the file alone
-  does not delete it.
+  does not delete it, and it does not trigger a sync either: Render counts a
+  removal as "no changes", so no sync runs and the Blueprint keeps listing the
+  service until it is deleted. Once it is out of the file on `main`, deleting
+  it is safe (seen with `civic-spaces-slice-assignment`, #4, 2026-11-09).
 - **Renaming a service:** Render matches services by name. Rename in the
   dashboard and here in the same change, or the sync creates a new service.
 
