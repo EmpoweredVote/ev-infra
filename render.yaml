@@ -591,6 +591,30 @@ projects:
             staticPublishPath: .
             previews:
               generation: 'off'
+            # Old June-2026 site URLs still in Google's index (ev-cto WATCHLIST #97).
+            # /terms -> /privacy until a Terms page exists (founder decision 2026-11-13).
+            routes:
+              - type: redirect
+                source: /about
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /faq
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /volunteer
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /pillar/inform
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /pillar/connect
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /pillar/empower
+                destination: https://empowered.vote/
+              - type: redirect
+                source: /terms
+                destination: https://empowered.vote/privacy
             domains:
               - empowered.vote
               - alpha.empowered.vote
