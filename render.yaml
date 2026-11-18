@@ -814,7 +814,7 @@ services:
         - backend/**
     buildCommand: cd backend && npm install --include=dev && npm run build
     startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js fec-auto-match; a=$?; node --dns-result-order=verbatim dist/jobs/run.js fec-finance-summary; c=$?; node --dns-result-order=verbatim
-      dist/jobs/run.js fec-burst; b=$?; [ $a -eq 0 ] && [ $c -eq 0 ] && [ $b -eq 0 ]
+      dist/jobs/run.js fec-burst; b=$?; node --dns-result-order=verbatim dist/jobs/run.js pac-career-nightly; d=$?; [ $a -eq 0 ] && [ $c -eq 0 ] && [ $b -eq 0 ] && [ $d -eq 0 ]
     envVars:
       - fromGroup: ev-jobs-shared
       - key: NPM_CONFIG_INCLUDE
@@ -856,6 +856,25 @@ services:
         sync: false
       - key: NODE_OPTIONS
         sync: false
+  # PAC money over a whole career (ev-accounts CA_0390–CA_0394): FEC per-cycle candidate totals for every id in
+  # fec_candidate_ids, stalest first (~1,900 calls on the shared FEC key), then the verdicts. Wednesday afternoon,
+  # away from the 06:00 fec-burst that shares the key.
+  - type: cron
+    runtime: node
+    name: ev-jobs-pac-career-weekly
+    plan: starter
+    region: oregon
+    schedule: 0 15 * * 3
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js pac-career-weekly
+    envVars:
+      - fromGroup: ev-jobs-shared
   - type: cron
     runtime: node
     name: ev-jobs-ocpf
