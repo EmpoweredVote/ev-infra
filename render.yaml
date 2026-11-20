@@ -837,6 +837,8 @@ services:
       - fromGroup: ev-jobs-shared
       - key: NPM_CONFIG_INCLUDE
         sync: false
+  # member-ids first (ev-accounts #1555): every sitting state legislator's Open States id, matched by seat from
+  # data.openstates.org (public, no key), so a new member's id lands before that week's votes. Adds only.
   - type: cron
     runtime: node
     name: ev-jobs-legiscan
@@ -847,7 +849,7 @@ services:
     branch: master
     autoDeployTrigger: commit
     buildCommand: cd backend && npm install --include=dev && npx tsc
-    startCommand: cd backend && node dist/jobs/run.js legiscan; a=$?; node dist/jobs/run.js federal-bills; b=$?; node dist/jobs/run.js federal-votes; c=$?; [ "$a$b$c" = 000 ]
+    startCommand: cd backend && node dist/jobs/run.js member-ids; m=$?; node dist/jobs/run.js legiscan; a=$?; node dist/jobs/run.js federal-bills; b=$?; node dist/jobs/run.js federal-votes; c=$?; [ "$m$a$b$c" = 0000 ]
     envVars:
       - fromGroup: ev-jobs-shared
       - key: LEGISCAN_FORCE
