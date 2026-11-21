@@ -1,7 +1,10 @@
 # Empowered Vote — every Render service in workspace tea-d69tn76mcj7s738vmt10.
 #
-# DRAFT. Generated 2026-11-06 from the Render REST API (not linked to Render).
-# See README.md before changing or linking this file.
+# Generated 2026-11-06 from the Render REST API. LINKED to Render since
+# 2026-11-07: Blueprint exs-dbn7hgjrjlhs739nnekg, branch `main`, auto-sync on
+# (ev-cto decision 0037). Every merge to `main` syncs, and a sync overwrites
+# any dashboard edit that conflicts with this file.
+# See README.md before changing this file.
 #
 # Env vars are names only. Every one is `sync: false`: Render keeps the value
 # already set in the dashboard, and this file never holds a secret.
