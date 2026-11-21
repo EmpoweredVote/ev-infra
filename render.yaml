@@ -819,7 +819,7 @@ services:
         - backend/**
     buildCommand: cd backend && npm install --include=dev && npm run build
     startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js fec-auto-match; a=$?; node --dns-result-order=verbatim dist/jobs/run.js fec-finance-summary; c=$?; node --dns-result-order=verbatim
-      dist/jobs/run.js fec-burst; b=$?; node --dns-result-order=verbatim dist/jobs/run.js pac-career-nightly; d=$?; [ $a -eq 0 ] && [ $c -eq 0 ] && [ $b -eq 0 ] && [ $d -eq 0 ]
+      dist/jobs/run.js fec-burst; b=$?; [ $a -eq 0 ] && [ $c -eq 0 ] && [ $b -eq 0 ]
     envVars:
       - fromGroup: ev-jobs-shared
       - key: NPM_CONFIG_INCLUDE
@@ -863,6 +863,26 @@ services:
         sync: false
       - key: NODE_OPTIONS
         sync: false
+  # PAC money over a whole career, nightly (ev-accounts CA_0390–CA_0394): reads FEC's daily e-filing zips (no API key,
+  # no rate limit) for our campaigns' reports. Its own service since 2026-11-21: as the last step of ev-jobs-fec-burst
+  # it never ran on the days the burst hit Render's 12-hour ceiling (ev-cto watchlist #102). 05:00 UTC is after FEC's
+  # ~03:05 UTC nightly load and before the 06:00 burst.
+  - type: cron
+    runtime: node
+    name: ev-jobs-pac-career-nightly
+    plan: starter
+    region: oregon
+    schedule: 0 5 * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js pac-career-nightly
+    envVars:
+      - fromGroup: ev-jobs-shared
   # PAC money over a whole career (ev-accounts CA_0390–CA_0394): FEC per-cycle candidate totals for every id in
   # fec_candidate_ids, stalest first (~1,900 calls on the shared FEC key), then the verdicts. Wednesday afternoon,
   # away from the 06:00 fec-burst that shares the key.
