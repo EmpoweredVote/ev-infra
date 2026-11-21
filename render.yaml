@@ -193,6 +193,8 @@ projects:
               - listening.empowered.vote
             renderSubdomainPolicy: enabled
             envVars:
+              - key: ABANDON_WATCH
+                sync: false
               - key: ACCOUNTS_API_BASE
                 sync: false
               - key: DATABASE_TRANSACTION_POOLER_URL
