@@ -222,6 +222,8 @@ projects:
                 sync: false
               - key: NODE_OPTIONS
                 sync: false
+              - key: SEGMENT_EXPIRY
+                sync: false
               - key: SUPABASE_SERVICE_ROLE_KEY
                 sync: false
               - key: WORKOS_CLIENT_ID
