@@ -500,6 +500,15 @@ projects:
                 sync: false
               - key: GEMS_SERVICE_KEYS
                 sync: false
+              # Both read by the API only (ev-accounts #1606). GEO_OVERLAP_STORE_ENABLED is the
+              # kill switch for READING the durable overlap store: absent means ON, '0' or 'false'
+              # sends every browse back to computing from geometry. GEO_OVERLAP_WARM_ON_BOOT is
+              # absent = OFF; set it and each API boot warms the store in the background. Neither
+              # is live — both are read once at module load, so a change needs a redeploy.
+              - key: GEO_OVERLAP_STORE_ENABLED
+                sync: false
+              - key: GEO_OVERLAP_WARM_ON_BOOT
+                sync: false
               - key: GOOGLE_CIVIC_API_KEY
                 sync: false
               - key: GOOGLE_MAPS_API_KEY
@@ -826,6 +835,33 @@ services:
       - fromGroup: ev-jobs-shared
       - key: NPM_CONFIG_INCLUDE
         sync: false
+  # The geo-overlap store (ev-accounts #1606, migration CC_0511). Every write to
+  # essentials.geofence_boundaries bumps essentials.geofence_version, and every deploy that changes
+  # the overlap resolver's SQL changes its fingerprint. Either one makes every stored answer
+  # superseded, so without this job the next visitor to an area pays the cold PostGIS recompute:
+  # 3.3 s for California, and the US row (40,899 pairs, 83 s measured) EXCEEDS ev_api's 30-second
+  # statement timeout and errors outright. The TIGER loader warms the store itself after an ingest;
+  # this cron is the backstop for every other path, and the only thing that sweeps superseded rows.
+  # Hourly at :40, off the top of the hour where the daily jobs sit. Measured 2026-11-24 on prod:
+  # 348 ms when nothing has moved (two indexed queries), 130 s to recompute all 53 G4000 seeds cold.
+  # Not gated by GEO_OVERLAP_STORE_ENABLED — that kill switch stops the API READING the store, and
+  # the warm keeps writing so that turning it back on does not meet a cold store.
+  - type: cron
+    runtime: node
+    name: ev-jobs-geo-overlap-warm
+    plan: starter
+    region: oregon
+    schedule: 40 * * * *
+    repo: https://github.com/EmpoweredVote/ev-accounts
+    branch: master
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - backend/**
+    buildCommand: cd backend && npm install --include=dev && npm run build
+    startCommand: cd backend && node --dns-result-order=verbatim dist/jobs/run.js geo-overlap-warm
+    envVars:
+      - fromGroup: ev-jobs-shared
   - type: cron
     runtime: node
     name: ev-jobs-la-county-netfile

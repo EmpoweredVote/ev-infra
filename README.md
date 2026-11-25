@@ -1,6 +1,6 @@
 # ev-infra
 
-`render.yaml` here describes every Render service Empowered Vote runs: 27
+`render.yaml` here describes every Render service Empowered Vote runs: 30
 services and 2 environment groups in workspace `tea-d69tn76mcj7s738vmt10`.
 It is a Render Blueprint ([spec](https://render.com/docs/blueprint-spec)).
 
@@ -32,9 +32,9 @@ public: it holds no secret values.
 
 - `projects` → `Empowered Vote` → `Production`: the 20 services that sit in
   that Render project today.
-- Top-level `services`: the 7 `ev-jobs-*` cron jobs. They belong to no
+- Top-level `services`: the 10 `ev-jobs-*` cron jobs. They belong to no
   project on Render, and this file keeps it that way.
-- `envVarGroups`: `ev-jobs-shared` (linked to all 7 crons) and
+- `envVarGroups`: `ev-jobs-shared` (linked to all 10 crons) and
   `EV-NoServices` (linked to nothing).
 - Each service names its own `repo:` and `branch:`, so one file covers all
   ten app repos.
